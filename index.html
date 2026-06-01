@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brett Mowers — Action Items</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --bg: #f5f4f0;
+    --surface: #ffffff;
+    --dark: #1a1a1a;
+    --red: #8B1A1A;
+    --red-light: #fef2f2;
+    --orange: #c2410c;
+    --blue: #0369a1;
+    --gray: #4b5563;
+    --border: #e5e7eb;
+    --muted: #9ca3af;
+    --text: #374151;
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body: 'Source Sans 3', system-ui, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--dark);
+    min-height: 100vh;
+    font-size: 15px;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--dark);
+    color: #f5f4f0;
+    padding: 20px 24px 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 3px solid var(--red);
+  }
+  .header-inner {
+    max-width: 780px;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .header-eyebrow {
+    font-family: var(--font-body);
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+  .header-title {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 400;
+    letter-spacing: -0.3px;
+  }
+  .header-meta {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+  .btn-add {
+    background: var(--red);
+    color: #fff;
+    border: none;
+    padding: 9px 18px;
+    font-size: 12px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .btn-add:hover { background: #6b1414; }
+  .btn-add.cancel { background: var(--gray); }
+
+  /* FILTER BAR */
+  .filter-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .filter-bar-inner {
+    max-width: 780px;
+    margin: 0 auto;
+    display: flex;
+    padding: 0 24px;
+  }
+  .filter-btn {
+    padding: 11px 14px;
+    border: none;
+    border-bottom: 2px solid transparent;
+    background: transparent;
+    cursor: pointer;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+    color: var(--muted);
+    font-family: var(--font-body);
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .filter-btn.active {
+    color: var(--red);
+    border-bottom-color: var(--red);
+    font-weight: 600;
+  }
+  .filter-btn .count {
+    font-size: 10px;
+    color: var(--muted);
+    margin-left: 4px;
+  }
+
+  /* ADD FORM */
+  .add-form {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 16px 24px;
+    display: none;
+  }
+  .add-form.open { display: block; }
+  .add-form-inner { max-width: 780px; margin: 0 auto; }
+  .form-grid { display: grid; gap: 10px; }
+  .form-row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .form-input {
+    padding: 9px 12px;
+    border: 1px solid var(--border);
+    font-size: 13px;
+    font-family: var(--font-body);
+    width: 100%;
+    outline: none;
+    transition: border-color 0.15s;
+    background: var(--bg);
+  }
+  .form-input:focus { border-color: var(--red); }
+  .form-input.flex1 { flex: 1; width: auto; }
+  select.form-input { width: auto; }
+  .btn-submit {
+    background: var(--dark);
+    color: #fff;
+    border: none;
+    padding: 9px 22px;
+    font-size: 12px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .btn-submit:hover { background: #333; }
+
+  /* MAIN */
+  .main {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 20px 24px 60px;
+  }
+
+  /* BUCKET */
+  .bucket { margin-bottom: 28px; }
+  .bucket-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .bucket-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #fff;
+    padding: 3px 12px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .bucket-line { height: 1px; flex: 1; }
+  .bucket-count { font-size: 10px; color: var(--muted); flex-shrink: 0; }
+
+  /* ITEM */
+  .item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left-width: 3px;
+    margin-bottom: 5px;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+  .item.completing { opacity: 0; transform: translateX(16px); }
+  .item-row {
+    display: flex;
+    align-items: flex-start;
+    padding: 11px 13px;
+    gap: 11px;
+  }
+  .item-check {
+    width: 17px;
+    height: 17px;
+    min-width: 17px;
+    border: 1.5px solid var(--border);
+    background: #fff;
+    cursor: pointer;
+    margin-top: 2px;
+    transition: all 0.15s;
+    appearance: none;
+    -webkit-appearance: none;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .item-check:hover {
+    border-color: var(--red);
+    background: var(--red-light);
+  }
+  .item-body { flex: 1; min-width: 0; }
+  .item-text {
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--dark);
+    cursor: pointer;
+    user-select: none;
+  }
+  .item-text .toggle-icon { font-size: 9px; color: var(--muted); margin-left: 5px; }
+  .item-detail {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 5px;
+    line-height: 1.5;
+    display: none;
+  }
+  .item-detail.open { display: block; }
+  .item-meta {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  .badge {
+    font-size: 10px;
+    padding: 2px 7px;
+    white-space: nowrap;
+    font-family: var(--font-body);
+  }
+  .badge-delegate {
+    background: #f3f4f6;
+    color: #6b7280;
+  }
+  .badge-tag {
+    border: 1px solid;
+  }
+
+  /* EMPTY */
+  .empty {
+    text-align: center;
+    padding: 50px 0;
+    color: var(--muted);
+    font-size: 13px;
+    font-family: var(--font-display);
+    font-style: italic;
+  }
+
+  /* COMPLETED SECTION */
+  .completed-section {
+    margin-top: 36px;
+    border-top: 1px solid var(--border);
+    padding-top: 20px;
+  }
+  .completed-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-family: var(--font-body);
+    padding: 0;
+    margin-bottom: 14px;
+  }
+  .completed-list { display: none; }
+  .completed-list.open { display: flex; flex-direction: column; gap: 4px; }
+  .completed-item {
+    background: #f9fafb;
+    border: 1px solid var(--border);
+    padding: 9px 13px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .completed-text {
+    font-size: 12px;
+    color: var(--muted);
+    text-decoration: line-through;
+    flex: 1;
+  }
+  .completed-date { font-size: 10px; color: #d1d5db; flex-shrink: 0; }
+  .btn-restore, .btn-delete-c {
+    font-size: 11px;
+    background: none;
+    padding: 2px 7px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    flex-shrink: 0;
+  }
+  .btn-restore { color: #6b7280; border: 1px solid var(--border); }
+  .btn-delete-c { color: #dc2626; border: 1px solid #fca5a5; }
+
+  /* LOADING */
+  .loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60vh;
+    font-family: var(--font-display);
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* EXPORT BUTTON */
+  .export-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 11px;
+    padding: 6px 14px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    letter-spacing: 0.5px;
+    margin-top: 32px;
+    display: block;
+    transition: all 0.15s;
+  }
+  .export-btn:hover { border-color: var(--dark); color: var(--dark); }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--dark);
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 12px;
+    font-family: var(--font-body);
+    letter-spacing: 0.3px;
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 999;
+    pointer-events: none;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* MOBILE */
+  @media (max-width: 600px) {
+    .header-title { font-size: 18px; }
+    .item-meta { display: none; }
+    .item-detail.open + .item-meta { display: flex; margin-top: 6px; }
+    .main { padding: 16px 16px 60px; }
+    .header { padding: 16px 16px 12px; }
+    .filter-bar-inner { padding: 0 16px; }
+    .add-form { padding: 14px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div>
+      <div class="header-eyebrow">River Valley Holdings</div>
+      <div class="header-title">Brett Mowers — Action Items</div>
+      <div class="header-meta" id="header-meta">Loading...</div>
+    </div>
+    <button class="btn-add" id="btn-add" onclick="toggleForm()">+ Add Item</button>
+  </div>
+</div>
+
+<div class="filter-bar">
+  <div class="filter-bar-inner" id="filter-bar"></div>
+</div>
+
+<div class="add-form" id="add-form">
+  <div class="add-form-inner">
+    <div class="form-grid">
+      <input class="form-input" id="f-text" placeholder="Item text *" />
+      <input class="form-input" id="f-detail" placeholder="Detail / context (optional)" />
+      <div class="form-row">
+        <select class="form-input" id="f-bucket">
+          <option>May 29</option>
+          <option selected>End of May</option>
+          <option>Early June</option>
+          <option>Ongoing</option>
+        </select>
+        <input class="form-input flex1" id="f-tag" placeholder="Tag (e.g. Freezer, SQF 10)" />
+        <select class="form-input" id="f-own" onchange="toggleDelegate()">
+          <option value="own">Own</option>
+          <option value="delegate">Delegate</option>
+        </select>
+        <input class="form-input flex1" id="f-delegate" placeholder="Delegate to..." style="display:none" />
+      </div>
+      <div>
+        <button class="btn-submit" onclick="addItem()">Add Item</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="main" id="main">
+  <div class="loading">Loading your items...</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const SUPABASE_URL = 'https://yknfimksrhvtsyebwfqs.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlrbmZpbWtzcmh2dHN5ZWJ3ZnFzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAzMjUzNzQsImV4cCI6MjA5NTkwMTM3NH0.2E9fmmMWBcoQ-2z69GuuvEahjXZFnDvcsOqnl2bU1zQ';
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const BUCKET_ORDER = ['May 29', 'End of May', 'Early June', 'Ongoing'];
+const BUCKET_COLORS = {
+  'May 29':     { bg: '#dc2626', border: '#fca5a5', left: '#dc2626' },
+  'End of May': { bg: '#ea580c', border: '#fdba74', left: '#ea580c' },
+  'Early June': { bg: '#0369a1', border: '#7dd3fc', left: '#0369a1' },
+  'Ongoing':    { bg: '#4b5563', border: '#d1d5db', left: '#4b5563' },
+};
+const TAG_COLORS = {
+  'Contract Service Provider': '#7c3aed',
+  'S&D Dry': '#b45309',
+  'Lead Development': '#0e7490',
+  'Mock Crisis': '#be123c',
+  'SQF 10': '#166534',
+  'Freezer': '#1e40af',
+  'Safety': '#92400e',
+  'DCN Strategy': '#4338ca',
+  'CSP / DCN': '#5b21b6',
+  'Lead Dev': '#0e7490',
+};
+function tagColor(tag) { return TAG_COLORS[tag] || '#6b7280'; }
+
+let allItems = [];
+let completedItems = [];
+let currentFilter = 'All';
+let showCompleted = false;
+let formOpen = false;
+
+async function loadItems() {
+  const { data, error } = await db
+    .from('action_items')
+    .select('*')
+    .order('sort_order', { ascending: true });
+  if (error) { console.error(error); return; }
+  allItems = data.filter(i => !i.completed);
+  completedItems = data.filter(i => i.completed).sort((a,b) => new Date(b.completed_at) - new Date(a.completed_at));
+  render();
+}
+
+function filteredItems() {
+  if (currentFilter === 'All') return allItems;
+  if (currentFilter === 'Own') return allItems.filter(i => i.own);
+  if (currentFilter === 'Delegate') return allItems.filter(i => !i.own);
+  return allItems.filter(i => i.bucket === currentFilter);
+}
+
+function render() {
+  updateMeta();
+  renderFilters();
+  renderMain();
+}
+
+function updateMeta() {
+  const own = allItems.filter(i => i.own).length;
+  const del = allItems.filter(i => !i.own).length;
+  document.getElementById('header-meta').textContent =
+    `${allItems.length} open · ${own} own · ${del} delegate`;
+}
+
+function renderFilters() {
+  const filters = ['All', 'Own', 'Delegate', ...BUCKET_ORDER];
+  const counts = {
+    'All': allItems.length,
+    'Own': allItems.filter(i=>i.own).length,
+    'Delegate': allItems.filter(i=>!i.own).length,
+    'May 29': allItems.filter(i=>i.bucket==='May 29').length,
+    'End of May': allItems.filter(i=>i.bucket==='End of May').length,
+    'Early June': allItems.filter(i=>i.bucket==='Early June').length,
+    'Ongoing': allItems.filter(i=>i.bucket==='Ongoing').length,
+  };
+  document.getElementById('filter-bar').innerHTML = filters.map(f => `
+    <button class="filter-btn ${currentFilter===f?'active':''}" onclick="setFilter('${f}')">
+      ${f} <span class="count">(${counts[f]||0})</span>
+    </button>
+  `).join('');
+}
+
+function renderMain() {
+  const fi = filteredItems();
+  const grouped = {};
+  BUCKET_ORDER.forEach(b => {
+    const bi = fi.filter(i => i.bucket === b);
+    if (bi.length) grouped[b] = bi;
+  });
+
+  let html = '';
+
+  if (Object.keys(grouped).length === 0) {
+    html += '<div class="empty">No items in this view.</div>';
+  }
+
+  Object.entries(grouped).forEach(([bucket, items]) => {
+    const c = BUCKET_COLORS[bucket];
+    html += `
+      <div class="bucket">
+        <div class="bucket-header">
+          <div class="bucket-label" style="background:${c.bg}">${bucket}</div>
+          <div class="bucket-line" style="background:${c.border}"></div>
+          <div class="bucket-count">${items.length} item${items.length!==1?'s':''}</div>
+        </div>
+        <div class="bucket-items">
+          ${items.map(item => renderItem(item, c)).join('')}
+        </div>
+      </div>`;
+  });
+
+  // Completed
+  if (completedItems.length > 0) {
+    html += `
+      <div class="completed-section">
+        <button class="completed-toggle" onclick="toggleCompleted()">
+          ${showCompleted?'▼':'▶'} Completed (${completedItems.length})
+        </button>
+        <div class="completed-list ${showCompleted?'open':''}">
+          ${completedItems.map(item => `
+            <div class="completed-item">
+              <span class="completed-text">${item.text}</span>
+              <span class="completed-date">${new Date(item.completed_at).toLocaleDateString()}</span>
+              <button class="btn-restore" onclick="restoreItem('${item.id}')">restore</button>
+              <button class="btn-delete-c" onclick="deleteItem('${item.id}')">delete</button>
+            </div>
+          `).join('')}
+        </div>
+      </div>`;
+  }
+
+  // Export button
+  html += `<button class="export-btn" onclick="exportForClaude()">↗ Export for Claude</button>`;
+
+  document.getElementById('main').innerHTML = html;
+}
+
+function renderItem(item, c) {
+  const hasDetail = item.detail && item.detail.trim();
+  const tc = tagColor(item.tag);
+  return `
+    <div class="item" id="item-${item.id}" style="border-left-color:${item.own?c.left:'#d1d5db'}">
+      <div class="item-row">
+        <input type="checkbox" class="item-check" onclick="completeItem('${item.id}')" title="Mark complete" />
+        <div class="item-body">
+          <div class="item-text" onclick="${hasDetail?`toggleDetail('${item.id}')`:''}" style="${hasDetail?'cursor:pointer':'cursor:default'}">
+            ${item.text}
+            ${hasDetail?`<span class="toggle-icon" id="icon-${item.id}">▼</span>`:''}
+          </div>
+          ${hasDetail?`<div class="item-detail" id="detail-${item.id}">${item.detail}</div>`:''}
+        </div>
+        <div class="item-meta">
+          ${!item.own?`<span class="badge badge-delegate">→ ${item.delegate||''}</span>`:''}
+          ${item.tag?`<span class="badge badge-tag" style="color:${tc};border-color:${tc}30;background:${tc}10">${item.tag}</span>`:''}
+        </div>
+      </div>
+    </div>`;
+}
+
+function toggleDetail(id) {
+  const d = document.getElementById(`detail-${id}`);
+  const icon = document.getElementById(`icon-${id}`);
+  if (d) { d.classList.toggle('open'); icon.textContent = d.classList.contains('open')?'▲':'▼'; }
+}
+
+async function completeItem(id) {
+  const el = document.getElementById(`item-${id}`);
+  if (el) el.classList.add('completing');
+  setTimeout(async () => {
+    const { error } = await db.from('action_items').update({
+      completed: true,
+      completed_at: new Date().toISOString()
+    }).eq('id', id);
+    if (!error) { showToast('Done ✓'); await loadItems(); }
+  }, 350);
+}
+
+async function restoreItem(id) {
+  await db.from('action_items').update({ completed: false, completed_at: null }).eq('id', id);
+  await loadItems();
+}
+
+async function deleteItem(id) {
+  await db.from('action_items').delete().eq('id', id);
+  await loadItems();
+}
+
+async function addItem() {
+  const text = document.getElementById('f-text').value.trim();
+  if (!text) { document.getElementById('f-text').focus(); return; }
+  const own = document.getElementById('f-own').value === 'own';
+  const { error } = await db.from('action_items').insert({
+    text,
+    detail: document.getElementById('f-detail').value.trim() || null,
+    bucket: document.getElementById('f-bucket').value,
+    tag: document.getElementById('f-tag').value.trim() || null,
+    own,
+    delegate: own ? null : document.getElementById('f-delegate').value.trim() || null,
+    sort_order: allItems.length + 1,
+    completed: false,
+  });
+  if (!error) {
+    document.getElementById('f-text').value = '';
+    document.getElementById('f-detail').value = '';
+    document.getElementById('f-tag').value = '';
+    document.getElementById('f-own').value = 'own';
+    document.getElementById('f-delegate').style.display = 'none';
+    toggleForm();
+    showToast('Item added');
+    await loadItems();
+  }
+}
+
+function setFilter(f) { currentFilter = f; render(); }
+function toggleCompleted() { showCompleted = !showCompleted; renderMain(); }
+function toggleDelegate() {
+  const v = document.getElementById('f-own').value;
+  document.getElementById('f-delegate').style.display = v==='delegate'?'block':'none';
+}
+function toggleForm() {
+  formOpen = !formOpen;
+  document.getElementById('add-form').classList.toggle('open', formOpen);
+  document.getElementById('btn-add').textContent = formOpen ? '✕ Cancel' : '+ Add Item';
+  document.getElementById('btn-add').classList.toggle('cancel', formOpen);
+  if (formOpen) setTimeout(()=>document.getElementById('f-text').focus(), 100);
+}
+
+function exportForClaude() {
+  const lines = ['# Brett Mowers — Action Items Export', `Generated: ${new Date().toLocaleString()}`, ''];
+  BUCKET_ORDER.forEach(bucket => {
+    const bi = allItems.filter(i => i.bucket === bucket);
+    if (!bi.length) return;
+    lines.push(`## ${bucket}`);
+    bi.forEach(i => {
+      lines.push(`- [ ] **${i.text}**${i.detail?' — '+i.detail:''}${!i.own?' *(delegate: '+i.delegate+')*':''}${i.tag?' *('+i.tag+')*':''}`);
+    });
+    lines.push('');
+  });
+  const text = lines.join('\n');
+  navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard — paste into Claude'));
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Enter key on form
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && formOpen) addItem();
+  if (e.key === 'Escape' && formOpen) toggleForm();
+});
+
+loadItems();
+</script>
+</body>
+</html>
