@@ -23,356 +23,90 @@
     --font-display: 'Playfair Display', Georgia, serif;
     --font-body: 'Source Sans 3', system-ui, sans-serif;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-body); background: var(--bg); color: var(--dark); min-height: 100vh; font-size: 15px; }
 
-  body {
-    font-family: var(--font-body);
-    background: var(--bg);
-    color: var(--dark);
-    min-height: 100vh;
-    font-size: 15px;
-  }
-
-  /* HEADER */
-  .header {
-    background: var(--dark);
-    color: #f5f4f0;
-    padding: 20px 24px 16px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    border-bottom: 3px solid var(--red);
-  }
-  .header-inner {
-    max-width: 780px;
-    margin: 0 auto;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 12px;
-  }
-  .header-eyebrow {
-    font-family: var(--font-body);
-    font-size: 10px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 5px;
-  }
-  .header-title {
-    font-family: var(--font-display);
-    font-size: 22px;
-    font-weight: 400;
-    letter-spacing: -0.3px;
-  }
-  .header-meta {
-    font-size: 11px;
-    color: var(--muted);
-    margin-top: 3px;
-  }
-  .btn-add {
-    background: var(--red);
-    color: #fff;
-    border: none;
-    padding: 9px 18px;
-    font-size: 12px;
-    font-family: var(--font-body);
-    font-weight: 600;
-    cursor: pointer;
-    letter-spacing: 0.5px;
-    white-space: nowrap;
-    transition: background 0.2s;
-    flex-shrink: 0;
-  }
+  .header { background: var(--dark); color: #f5f4f0; padding: 20px 24px 16px; position: sticky; top: 0; z-index: 100; border-bottom: 3px solid var(--red); }
+  .header-inner { max-width: 780px; margin: 0 auto; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
+  .header-eyebrow { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 5px; }
+  .header-title { font-family: var(--font-display); font-size: 22px; font-weight: 400; letter-spacing: -0.3px; }
+  .header-meta { font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .btn-add { background: var(--red); color: #fff; border: none; padding: 9px 18px; font-size: 12px; font-family: var(--font-body); font-weight: 600; cursor: pointer; letter-spacing: 0.5px; white-space: nowrap; transition: background 0.2s; flex-shrink: 0; }
   .btn-add:hover { background: #6b1414; }
   .btn-add.cancel { background: var(--gray); }
 
-  /* FILTER BAR */
-  .filter-bar {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  .filter-bar-inner {
-    max-width: 780px;
-    margin: 0 auto;
-    display: flex;
-    padding: 0 24px;
-  }
-  .filter-btn {
-    padding: 11px 14px;
-    border: none;
-    border-bottom: 2px solid transparent;
-    background: transparent;
-    cursor: pointer;
-    font-size: 11px;
-    letter-spacing: 0.5px;
-    color: var(--muted);
-    font-family: var(--font-body);
-    white-space: nowrap;
-    transition: all 0.15s;
-  }
-  .filter-btn.active {
-    color: var(--red);
-    border-bottom-color: var(--red);
-    font-weight: 600;
-  }
-  .filter-btn .count {
-    font-size: 10px;
-    color: var(--muted);
-    margin-left: 4px;
-  }
+  .filter-bar { background: var(--surface); border-bottom: 1px solid var(--border); overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .filter-bar-inner { max-width: 780px; margin: 0 auto; display: flex; padding: 0 24px; }
+  .filter-btn { padding: 11px 14px; border: none; border-bottom: 2px solid transparent; background: transparent; cursor: pointer; font-size: 11px; letter-spacing: 0.5px; color: var(--muted); font-family: var(--font-body); white-space: nowrap; transition: all 0.15s; }
+  .filter-btn.active { color: var(--red); border-bottom-color: var(--red); font-weight: 600; }
+  .filter-btn .count { font-size: 10px; color: var(--muted); margin-left: 4px; }
 
-  /* ADD FORM */
-  .add-form {
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    padding: 16px 24px;
-    display: none;
-  }
+  .add-form { background: var(--surface); border-bottom: 1px solid var(--border); padding: 16px 24px; display: none; }
   .add-form.open { display: block; }
   .add-form-inner { max-width: 780px; margin: 0 auto; }
   .form-grid { display: grid; gap: 10px; }
   .form-row { display: flex; gap: 10px; flex-wrap: wrap; }
-  .form-input {
-    padding: 9px 12px;
-    border: 1px solid var(--border);
-    font-size: 13px;
-    font-family: var(--font-body);
-    width: 100%;
-    outline: none;
-    transition: border-color 0.15s;
-    background: var(--bg);
-  }
+  .form-input { padding: 9px 12px; border: 1px solid var(--border); font-size: 13px; font-family: var(--font-body); width: 100%; outline: none; transition: border-color 0.15s; background: var(--bg); }
   .form-input:focus { border-color: var(--red); }
   .form-input.flex1 { flex: 1; width: auto; }
   select.form-input { width: auto; }
-  .btn-submit {
-    background: var(--dark);
-    color: #fff;
-    border: none;
-    padding: 9px 22px;
-    font-size: 12px;
-    font-family: var(--font-body);
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
+  .btn-submit { background: var(--dark); color: #fff; border: none; padding: 9px 22px; font-size: 12px; font-family: var(--font-body); font-weight: 600; cursor: pointer; }
   .btn-submit:hover { background: #333; }
 
-  /* MAIN */
-  .main {
-    max-width: 780px;
-    margin: 0 auto;
-    padding: 20px 24px 60px;
-  }
+  .main { max-width: 780px; margin: 0 auto; padding: 20px 24px 60px; }
 
-  /* BUCKET */
   .bucket { margin-bottom: 28px; }
-  .bucket-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-  .bucket-label {
-    font-size: 10px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: #fff;
-    padding: 3px 12px;
-    font-family: var(--font-body);
-    font-weight: 600;
-    flex-shrink: 0;
-  }
+  .bucket-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .bucket-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: #fff; padding: 3px 12px; font-family: var(--font-body); font-weight: 600; flex-shrink: 0; }
   .bucket-line { height: 1px; flex: 1; }
   .bucket-count { font-size: 10px; color: var(--muted); flex-shrink: 0; }
 
-  /* ITEM */
-  .item {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-left-width: 3px;
-    margin-bottom: 5px;
-    transition: opacity 0.35s ease, transform 0.35s ease;
-  }
+  .item { background: var(--surface); border: 1px solid var(--border); border-left-width: 3px; margin-bottom: 5px; transition: opacity 0.35s ease, transform 0.35s ease; }
+  .item.overdue { background: #fffbfb; }
   .item.completing { opacity: 0; transform: translateX(16px); }
-  .item-row {
-    display: flex;
-    align-items: flex-start;
-    padding: 11px 13px;
-    gap: 11px;
-  }
-  .item-check {
-    width: 17px;
-    height: 17px;
-    min-width: 17px;
-    border: 1.5px solid var(--border);
-    background: #fff;
-    cursor: pointer;
-    margin-top: 2px;
-    transition: all 0.15s;
-    appearance: none;
-    -webkit-appearance: none;
-    position: relative;
-    flex-shrink: 0;
-  }
-  .item-check:hover {
-    border-color: var(--red);
-    background: var(--red-light);
-  }
+  .item-row { display: flex; align-items: flex-start; padding: 11px 13px; gap: 11px; }
+  .item-check { width: 17px; height: 17px; min-width: 17px; border: 1.5px solid var(--border); background: #fff; cursor: pointer; margin-top: 2px; transition: all 0.15s; appearance: none; -webkit-appearance: none; flex-shrink: 0; }
+  .item-check:hover { border-color: var(--red); background: var(--red-light); }
   .item-body { flex: 1; min-width: 0; }
-  .item-text {
-    font-size: 13px;
-    line-height: 1.45;
-    color: var(--dark);
-    cursor: pointer;
-    user-select: none;
-  }
+  .item-text { font-size: 13px; line-height: 1.45; color: var(--dark); cursor: pointer; user-select: none; }
   .item-text .toggle-icon { font-size: 9px; color: var(--muted); margin-left: 5px; }
-  .item-detail {
-    font-size: 12px;
-    color: #6b7280;
-    margin-top: 5px;
-    line-height: 1.5;
-    display: none;
-  }
+  .item-detail { font-size: 12px; color: #6b7280; margin-top: 5px; line-height: 1.5; display: none; }
   .item-detail.open { display: block; }
-  .item-meta {
-    display: flex;
-    gap: 5px;
-    align-items: center;
-    flex-shrink: 0;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-  }
-  .badge {
-    font-size: 10px;
-    padding: 2px 7px;
-    white-space: nowrap;
-    font-family: var(--font-body);
-  }
-  .badge-delegate {
-    background: #f3f4f6;
-    color: #6b7280;
-  }
-  .badge-tag {
-    border: 1px solid;
-  }
+  .item-due { font-size: 10px; margin-top: 3px; }
+  .item-due.overdue { color: #dc2626; font-weight: 600; }
+  .item-due.today { color: #ea580c; font-weight: 600; }
+  .item-due.upcoming { color: var(--muted); }
+  .item-meta { display: flex; gap: 5px; align-items: flex-start; flex-direction: column; flex-shrink: 0; align-items: flex-end; }
+  .badge { font-size: 10px; padding: 2px 7px; white-space: nowrap; font-family: var(--font-body); }
+  .badge-delegate { background: #f3f4f6; color: #6b7280; }
+  .badge-tag { border: 1px solid; }
 
-  /* EMPTY */
-  .empty {
-    text-align: center;
-    padding: 50px 0;
-    color: var(--muted);
-    font-size: 13px;
-    font-family: var(--font-display);
-    font-style: italic;
-  }
+  .empty { text-align: center; padding: 50px 0; color: var(--muted); font-size: 13px; font-family: var(--font-display); font-style: italic; }
 
-  /* COMPLETED SECTION */
-  .completed-section {
-    margin-top: 36px;
-    border-top: 1px solid var(--border);
-    padding-top: 20px;
-  }
-  .completed-toggle {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 11px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--muted);
-    font-family: var(--font-body);
-    padding: 0;
-    margin-bottom: 14px;
-  }
+  .completed-section { margin-top: 36px; border-top: 1px solid var(--border); padding-top: 20px; }
+  .completed-toggle { background: none; border: none; cursor: pointer; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); font-family: var(--font-body); padding: 0; margin-bottom: 14px; }
   .completed-list { display: none; }
   .completed-list.open { display: flex; flex-direction: column; gap: 4px; }
-  .completed-item {
-    background: #f9fafb;
-    border: 1px solid var(--border);
-    padding: 9px 13px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .completed-text {
-    font-size: 12px;
-    color: var(--muted);
-    text-decoration: line-through;
-    flex: 1;
-  }
+  .completed-item { background: #f9fafb; border: 1px solid var(--border); padding: 9px 13px; display: flex; align-items: center; gap: 10px; }
+  .completed-text { font-size: 12px; color: var(--muted); text-decoration: line-through; flex: 1; }
   .completed-date { font-size: 10px; color: #d1d5db; flex-shrink: 0; }
-  .btn-restore, .btn-delete-c {
-    font-size: 11px;
-    background: none;
-    padding: 2px 7px;
-    cursor: pointer;
-    font-family: var(--font-body);
-    flex-shrink: 0;
-  }
+  .btn-restore, .btn-delete-c { font-size: 11px; background: none; padding: 2px 7px; cursor: pointer; font-family: var(--font-body); flex-shrink: 0; }
   .btn-restore { color: #6b7280; border: 1px solid var(--border); }
   .btn-delete-c { color: #dc2626; border: 1px solid #fca5a5; }
 
-  /* LOADING */
-  .loading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 60vh;
-    font-family: var(--font-display);
-    color: var(--muted);
-    font-style: italic;
-  }
-
-  /* EXPORT BUTTON */
-  .export-btn {
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    font-size: 11px;
-    padding: 6px 14px;
-    cursor: pointer;
-    font-family: var(--font-body);
-    letter-spacing: 0.5px;
-    margin-top: 32px;
-    display: block;
-    transition: all 0.15s;
-  }
+  .loading { display: flex; align-items: center; justify-content: center; height: 60vh; font-family: var(--font-display); color: var(--muted); font-style: italic; }
+  .export-btn { background: none; border: 1px solid var(--border); color: var(--muted); font-size: 11px; padding: 6px 14px; cursor: pointer; font-family: var(--font-body); letter-spacing: 0.5px; margin-top: 32px; display: block; transition: all 0.15s; }
   .export-btn:hover { border-color: var(--dark); color: var(--dark); }
-
-  /* TOAST */
-  .toast {
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%) translateY(80px);
-    background: var(--dark);
-    color: #fff;
-    padding: 10px 20px;
-    font-size: 12px;
-    font-family: var(--font-body);
-    letter-spacing: 0.3px;
-    opacity: 0;
-    transition: all 0.3s ease;
-    z-index: 999;
-    pointer-events: none;
-  }
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--dark); color: #fff; padding: 10px 20px; font-size: 12px; font-family: var(--font-body); opacity: 0; transition: all 0.3s ease; z-index: 999; pointer-events: none; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-  /* MOBILE */
   @media (max-width: 600px) {
     .header-title { font-size: 18px; }
-    .item-meta { display: none; }
-    .item-detail.open + .item-meta { display: flex; margin-top: 6px; }
     .main { padding: 16px 16px 60px; }
     .header { padding: 16px 16px 12px; }
     .filter-bar-inner { padding: 0 16px; }
     .add-form { padding: 14px 16px; }
+    .item-meta { display: none; }
   }
 </style>
 </head>
@@ -399,12 +133,7 @@
       <input class="form-input" id="f-text" placeholder="Item text *" />
       <input class="form-input" id="f-detail" placeholder="Detail / context (optional)" />
       <div class="form-row">
-        <select class="form-input" id="f-bucket">
-          <option>May 29</option>
-          <option selected>End of May</option>
-          <option>Early June</option>
-          <option>Ongoing</option>
-        </select>
+        <input class="form-input flex1" id="f-due" type="date" title="Due date (optional)" />
         <input class="form-input flex1" id="f-tag" placeholder="Tag (e.g. Freezer, SQF 10)" />
         <select class="form-input" id="f-own" onchange="toggleDelegate()">
           <option value="own">Own</option>
@@ -431,26 +160,34 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const BUCKET_ORDER = ['May 29', 'End of May', 'Early June', 'Ongoing'];
-const BUCKET_COLORS = {
-  'May 29':     { bg: '#dc2626', border: '#fca5a5', left: '#dc2626' },
-  'End of May': { bg: '#ea580c', border: '#fdba74', left: '#ea580c' },
-  'Early June': { bg: '#0369a1', border: '#7dd3fc', left: '#0369a1' },
-  'Ongoing':    { bg: '#4b5563', border: '#d1d5db', left: '#4b5563' },
-};
 const TAG_COLORS = {
-  'Contract Service Provider': '#7c3aed',
-  'S&D Dry': '#b45309',
-  'Lead Development': '#0e7490',
-  'Mock Crisis': '#be123c',
-  'SQF 10': '#166534',
-  'Freezer': '#1e40af',
-  'Safety': '#92400e',
-  'DCN Strategy': '#4338ca',
-  'CSP / DCN': '#5b21b6',
-  'Lead Dev': '#0e7490',
+  'Contract Service Provider': '#7c3aed', 'S&D Dry': '#b45309', 'Lead Development': '#0e7490',
+  'Mock Crisis': '#be123c', 'SQF 10': '#166534', 'Freezer': '#1e40af', 'Safety': '#92400e',
+  'DCN Strategy': '#4338ca', 'CSP / DCN': '#5b21b6', 'Lead Dev': '#0e7490',
 };
 function tagColor(tag) { return TAG_COLORS[tag] || '#6b7280'; }
+
+const today = new Date(); today.setHours(0,0,0,0);
+
+function dueMeta(due_date) {
+  if (!due_date) return null;
+  const d = new Date(due_date + 'T00:00:00');
+  const diff = Math.round((d - today) / 86400000);
+  if (diff < 0) return { label: `Overdue · ${fmtDate(d)}`, cls: 'overdue' };
+  if (diff === 0) return { label: `Due today`, cls: 'today' };
+  if (diff === 1) return { label: `Due tomorrow`, cls: 'upcoming' };
+  return { label: `Due ${fmtDate(d)}`, cls: 'upcoming' };
+}
+
+function fmtDate(d) {
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function isOverdue(due_date) {
+  if (!due_date) return false;
+  const d = new Date(due_date + 'T00:00:00');
+  return d < today;
+}
 
 let allItems = [];
 let completedItems = [];
@@ -458,11 +195,31 @@ let currentFilter = 'All';
 let showCompleted = false;
 let formOpen = false;
 
+// Bucket logic based on due_date
+function getBucket(item) {
+  if (!item.due_date) return 'No Date';
+  const d = new Date(item.due_date + 'T00:00:00');
+  const diff = Math.round((d - today) / 86400000);
+  if (diff < 0) return 'Overdue';
+  if (diff <= 3) return 'This Week';
+  if (diff <= 14) return 'This Month';
+  return 'Upcoming';
+}
+
+const BUCKET_ORDER = ['Overdue', 'This Week', 'This Month', 'Upcoming', 'No Date'];
+const BUCKET_COLORS = {
+  'Overdue':    { bg: '#dc2626', border: '#fca5a5' },
+  'This Week':  { bg: '#ea580c', border: '#fdba74' },
+  'This Month': { bg: '#0369a1', border: '#7dd3fc' },
+  'Upcoming':   { bg: '#4b5563', border: '#d1d5db' },
+  'No Date':    { bg: '#6b7280', border: '#e5e7eb' },
+};
+
 async function loadItems() {
   const { data, error } = await db
     .from('action_items')
     .select('*')
-    .order('sort_order', { ascending: true });
+    .order('due_date', { ascending: true, nullsFirst: false });
   if (error) { console.error(error); return; }
   allItems = data.filter(i => !i.completed);
   completedItems = data.filter(i => i.completed).sort((a,b) => new Date(b.completed_at) - new Date(a.completed_at));
@@ -473,32 +230,29 @@ function filteredItems() {
   if (currentFilter === 'All') return allItems;
   if (currentFilter === 'Own') return allItems.filter(i => i.own);
   if (currentFilter === 'Delegate') return allItems.filter(i => !i.own);
-  return allItems.filter(i => i.bucket === currentFilter);
+  if (currentFilter === 'Overdue') return allItems.filter(i => isOverdue(i.due_date));
+  return allItems;
 }
 
-function render() {
-  updateMeta();
-  renderFilters();
-  renderMain();
-}
+function render() { updateMeta(); renderFilters(); renderMain(); }
 
 function updateMeta() {
   const own = allItems.filter(i => i.own).length;
   const del = allItems.filter(i => !i.own).length;
-  document.getElementById('header-meta').textContent =
-    `${allItems.length} open · ${own} own · ${del} delegate`;
+  const overdue = allItems.filter(i => isOverdue(i.due_date)).length;
+  let meta = `${allItems.length} open · ${own} own · ${del} delegate`;
+  if (overdue > 0) meta += ` · ${overdue} overdue`;
+  document.getElementById('header-meta').textContent = meta;
 }
 
 function renderFilters() {
-  const filters = ['All', 'Own', 'Delegate', ...BUCKET_ORDER];
+  const overdue = allItems.filter(i => isOverdue(i.due_date)).length;
+  const filters = ['All', 'Own', 'Delegate', overdue > 0 ? 'Overdue' : null].filter(Boolean);
   const counts = {
     'All': allItems.length,
     'Own': allItems.filter(i=>i.own).length,
     'Delegate': allItems.filter(i=>!i.own).length,
-    'May 29': allItems.filter(i=>i.bucket==='May 29').length,
-    'End of May': allItems.filter(i=>i.bucket==='End of May').length,
-    'Early June': allItems.filter(i=>i.bucket==='Early June').length,
-    'Ongoing': allItems.filter(i=>i.bucket==='Ongoing').length,
+    'Overdue': overdue,
   };
   document.getElementById('filter-bar').innerHTML = filters.map(f => `
     <button class="filter-btn ${currentFilter===f?'active':''}" onclick="setFilter('${f}')">
@@ -511,15 +265,12 @@ function renderMain() {
   const fi = filteredItems();
   const grouped = {};
   BUCKET_ORDER.forEach(b => {
-    const bi = fi.filter(i => i.bucket === b);
+    const bi = fi.filter(i => getBucket(i) === b);
     if (bi.length) grouped[b] = bi;
   });
 
   let html = '';
-
-  if (Object.keys(grouped).length === 0) {
-    html += '<div class="empty">No items in this view.</div>';
-  }
+  if (Object.keys(grouped).length === 0) html += '<div class="empty">No items in this view.</div>';
 
   Object.entries(grouped).forEach(([bucket, items]) => {
     const c = BUCKET_COLORS[bucket];
@@ -530,13 +281,10 @@ function renderMain() {
           <div class="bucket-line" style="background:${c.border}"></div>
           <div class="bucket-count">${items.length} item${items.length!==1?'s':''}</div>
         </div>
-        <div class="bucket-items">
-          ${items.map(item => renderItem(item, c)).join('')}
-        </div>
+        <div>${items.map(item => renderItem(item, c)).join('')}</div>
       </div>`;
   });
 
-  // Completed
   if (completedItems.length > 0) {
     html += `
       <div class="completed-section">
@@ -556,17 +304,17 @@ function renderMain() {
       </div>`;
   }
 
-  // Export button
   html += `<button class="export-btn" onclick="exportForClaude()">↗ Export for Claude</button>`;
-
   document.getElementById('main').innerHTML = html;
 }
 
 function renderItem(item, c) {
   const hasDetail = item.detail && item.detail.trim();
   const tc = tagColor(item.tag);
+  const due = dueMeta(item.due_date);
+  const overdueCls = isOverdue(item.due_date) ? 'overdue' : '';
   return `
-    <div class="item" id="item-${item.id}" style="border-left-color:${item.own?c.left:'#d1d5db'}">
+    <div class="item ${overdueCls}" id="item-${item.id}" style="border-left-color:${item.own?c.bg:'#d1d5db'}">
       <div class="item-row">
         <input type="checkbox" class="item-check" onclick="completeItem('${item.id}')" title="Mark complete" />
         <div class="item-body">
@@ -574,6 +322,7 @@ function renderItem(item, c) {
             ${item.text}
             ${hasDetail?`<span class="toggle-icon" id="icon-${item.id}">▼</span>`:''}
           </div>
+          ${due ? `<div class="item-due ${due.cls}">${due.label}</div>` : ''}
           ${hasDetail?`<div class="item-detail" id="detail-${item.id}">${item.detail}</div>`:''}
         </div>
         <div class="item-meta">
@@ -594,11 +343,9 @@ async function completeItem(id) {
   const el = document.getElementById(`item-${id}`);
   if (el) el.classList.add('completing');
   setTimeout(async () => {
-    const { error } = await db.from('action_items').update({
-      completed: true,
-      completed_at: new Date().toISOString()
-    }).eq('id', id);
-    if (!error) { showToast('Done ✓'); await loadItems(); }
+    await db.from('action_items').update({ completed: true, completed_at: new Date().toISOString() }).eq('id', id);
+    showToast('Done ✓');
+    await loadItems();
   }, 350);
 }
 
@@ -616,55 +363,59 @@ async function addItem() {
   const text = document.getElementById('f-text').value.trim();
   if (!text) { document.getElementById('f-text').focus(); return; }
   const own = document.getElementById('f-own').value === 'own';
-  const { error } = await db.from('action_items').insert({
+  const due = document.getElementById('f-due').value || null;
+  await db.from('action_items').insert({
     text,
     detail: document.getElementById('f-detail').value.trim() || null,
-    bucket: document.getElementById('f-bucket').value,
+    due_date: due,
     tag: document.getElementById('f-tag').value.trim() || null,
     own,
     delegate: own ? null : document.getElementById('f-delegate').value.trim() || null,
     sort_order: allItems.length + 1,
     completed: false,
   });
-  if (!error) {
-    document.getElementById('f-text').value = '';
-    document.getElementById('f-detail').value = '';
-    document.getElementById('f-tag').value = '';
-    document.getElementById('f-own').value = 'own';
-    document.getElementById('f-delegate').style.display = 'none';
-    toggleForm();
-    showToast('Item added');
-    await loadItems();
-  }
+  document.getElementById('f-text').value = '';
+  document.getElementById('f-detail').value = '';
+  document.getElementById('f-due').value = '';
+  document.getElementById('f-tag').value = '';
+  toggleForm();
+  showToast('Item added');
+  await loadItems();
 }
 
 function setFilter(f) { currentFilter = f; render(); }
 function toggleCompleted() { showCompleted = !showCompleted; renderMain(); }
 function toggleDelegate() {
-  const v = document.getElementById('f-own').value;
-  document.getElementById('f-delegate').style.display = v==='delegate'?'block':'none';
+  document.getElementById('f-delegate').style.display =
+    document.getElementById('f-own').value === 'delegate' ? 'block' : 'none';
 }
 function toggleForm() {
   formOpen = !formOpen;
   document.getElementById('add-form').classList.toggle('open', formOpen);
   document.getElementById('btn-add').textContent = formOpen ? '✕ Cancel' : '+ Add Item';
   document.getElementById('btn-add').classList.toggle('cancel', formOpen);
-  if (formOpen) setTimeout(()=>document.getElementById('f-text').focus(), 100);
+  if (formOpen) setTimeout(() => document.getElementById('f-text').focus(), 100);
 }
 
 function exportForClaude() {
+  const byDate = [...allItems].sort((a,b) => {
+    if (!a.due_date && !b.due_date) return 0;
+    if (!a.due_date) return 1;
+    if (!b.due_date) return -1;
+    return new Date(a.due_date) - new Date(b.due_date);
+  });
   const lines = ['# Brett Mowers — Action Items Export', `Generated: ${new Date().toLocaleString()}`, ''];
   BUCKET_ORDER.forEach(bucket => {
-    const bi = allItems.filter(i => i.bucket === bucket);
+    const bi = byDate.filter(i => getBucket(i) === bucket);
     if (!bi.length) return;
     lines.push(`## ${bucket}`);
     bi.forEach(i => {
-      lines.push(`- [ ] **${i.text}**${i.detail?' — '+i.detail:''}${!i.own?' *(delegate: '+i.delegate+')*':''}${i.tag?' *('+i.tag+')*':''}`);
+      const due = i.due_date ? ` · Due ${new Date(i.due_date+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'})}` : '';
+      lines.push(`- [ ] **${i.text}**${due}${i.detail?' — '+i.detail:''}${!i.own?' *(delegate: '+i.delegate+')*':''}${i.tag?' *('+i.tag+')*':''}`);
     });
     lines.push('');
   });
-  const text = lines.join('\n');
-  navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard — paste into Claude'));
+  navigator.clipboard.writeText(lines.join('\n')).then(() => showToast('Copied — paste into Claude'));
 }
 
 function showToast(msg) {
@@ -674,7 +425,6 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2500);
 }
 
-// Enter key on form
 document.addEventListener('keydown', e => {
   if (e.key === 'Enter' && formOpen) addItem();
   if (e.key === 'Escape' && formOpen) toggleForm();
