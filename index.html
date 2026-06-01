@@ -202,15 +202,21 @@ function getBucket(item) {
   const diff = Math.round((d - today) / 86400000);
   if (diff < 0) return 'Overdue';
   if (diff <= 3) return 'This Week';
-  if (diff <= 14) return 'This Month';
+  // This Month = same calendar month and year as today
+  if (d.getMonth() === today.getMonth() && d.getFullYear() === today.getFullYear()) return 'This Month';
+  // Next Month
+  const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+  const monthAfter = new Date(today.getFullYear(), today.getMonth() + 2, 1);
+  if (d >= nextMonth && d < monthAfter) return 'Next Month';
   return 'Upcoming';
 }
 
-const BUCKET_ORDER = ['Overdue', 'This Week', 'This Month', 'Upcoming', 'No Date'];
+const BUCKET_ORDER = ['Overdue', 'This Week', 'This Month', 'Next Month', 'Upcoming', 'No Date'];
 const BUCKET_COLORS = {
   'Overdue':    { bg: '#dc2626', border: '#fca5a5' },
   'This Week':  { bg: '#ea580c', border: '#fdba74' },
   'This Month': { bg: '#0369a1', border: '#7dd3fc' },
+  'Next Month': { bg: '#0e7490', border: '#a5f3fc' },
   'Upcoming':   { bg: '#4b5563', border: '#d1d5db' },
   'No Date':    { bg: '#6b7280', border: '#e5e7eb' },
 };
