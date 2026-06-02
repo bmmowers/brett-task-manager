@@ -63,7 +63,13 @@
 
   .item { background: var(--surface); border: 1px solid var(--border); border-left-width: 3px; margin-bottom: 5px; transition: opacity 0.35s ease, transform 0.35s ease; }
   .item.overdue { background: #fffbfb; }
+  .item.important { background: #fffbeb; border-color: #f59e0b; }
+  .item.important.overdue { background: #fff7ed; }
   .item.completing { opacity: 0; transform: translateX(16px); }
+  .important-btn { background: none; border: none; cursor: pointer; font-size: 15px; padding: 0 2px; margin-top: 1px; opacity: 0.25; transition: opacity 0.15s, transform 0.15s; flex-shrink: 0; line-height: 1; }
+  .important-btn:hover { opacity: 0.6; transform: scale(1.2); }
+  .important-btn.flagged { opacity: 1; }
+  .badge-important { background: #f59e0b; color: #fff; font-size: 10px; padding: 2px 7px; font-weight: 600; letter-spacing: 0.5px; }
   .item-row { display: flex; align-items: flex-start; padding: 11px 13px; gap: 11px; }
   .item-check { width: 17px; height: 17px; min-width: 17px; border: 1.5px solid var(--border); background: #fff; cursor: pointer; margin-top: 2px; transition: all 0.15s; appearance: none; -webkit-appearance: none; flex-shrink: 0; }
   .item-check:hover { border-color: var(--red); background: var(--red-light); }
@@ -237,6 +243,7 @@ function filteredItems() {
   if (currentFilter === 'Own') return allItems.filter(i => i.own);
   if (currentFilter === 'Delegate') return allItems.filter(i => !i.own);
   if (currentFilter === 'Overdue') return allItems.filter(i => isOverdue(i.due_date));
+  if (currentFilter === 'Important') return allItems.filter(i => i.important);
   return allItems;
 }
 
@@ -253,12 +260,14 @@ function updateMeta() {
 
 function renderFilters() {
   const overdue = allItems.filter(i => isOverdue(i.due_date)).length;
-  const filters = ['All', 'Own', 'Delegate', overdue > 0 ? 'Overdue' : null].filter(Boolean);
+  const important = allItems.filter(i => i.important).length;
+  const filters = ['All', 'Own', 'Delegate', overdue > 0 ? 'Overdue' : null, important > 0 ? 'Important' : null].filter(Boolean);
   const counts = {
     'All': allItems.length,
     'Own': allItems.filter(i=>i.own).length,
     'Delegate': allItems.filter(i=>!i.own).length,
     'Overdue': overdue,
+    'Important': important,
   };
   document.getElementById('filter-bar').innerHTML = filters.map(f => `
     <button class="filter-btn ${currentFilter===f?'active':''}" onclick="setFilter('${f}')">
@@ -319,12 +328,14 @@ function renderItem(item, c) {
   const tc = tagColor(item.tag);
   const due = dueMeta(item.due_date);
   const overdueCls = isOverdue(item.due_date) ? 'overdue' : '';
+  const importantCls = item.important ? 'important' : '';
+  const leftColor = item.important ? '#f59e0b' : (item.own ? c.bg : '#d1d5db');
   return `
-    <div class="item ${overdueCls}" id="item-${item.id}" style="border-left-color:${item.own?c.bg:'#d1d5db'}">
+    <div class="item ${overdueCls} ${importantCls}" id="item-${item.id}" style="border-left-color:${leftColor}">
       <div class="item-row">
         <input type="checkbox" class="item-check" onclick="completeItem('${item.id}')" title="Mark complete" />
         <div class="item-body">
-          <div class="item-text" onclick="${hasDetail?`toggleDetail('${item.id}')`:''}" style="${hasDetail?'cursor:pointer':'cursor:default'}">
+          <div class="item-text" onclick="${hasDetail?`toggleDetail('${item.id}')`:''}" style="${hasDetail?'cursor:pointer':'cursor:default'}${item.important?';font-weight:600':''}">
             ${item.text}
             ${hasDetail?`<span class="toggle-icon" id="icon-${item.id}">▼</span>`:''}
           </div>
@@ -332,11 +343,18 @@ function renderItem(item, c) {
           ${hasDetail?`<div class="item-detail" id="detail-${item.id}">${item.detail}</div>`:''}
         </div>
         <div class="item-meta">
+          ${item.important?`<span class="badge badge-important">⚑ Important</span>`:''}
           ${!item.own?`<span class="badge badge-delegate">→ ${item.delegate||''}</span>`:''}
           ${item.tag?`<span class="badge badge-tag" style="color:${tc};border-color:${tc}30;background:${tc}10">${item.tag}</span>`:''}
         </div>
+        <button class="important-btn ${item.important?'flagged':''}" onclick="toggleImportant('${item.id}', ${item.important})" title="${item.important?'Remove important flag':'Mark as important'}">⚑</button>
       </div>
     </div>`;
+}
+
+async function toggleImportant(id, current) {
+  await db.from('action_items').update({ important: !current }).eq('id', id);
+  await loadItems();
 }
 
 function toggleDetail(id) {
