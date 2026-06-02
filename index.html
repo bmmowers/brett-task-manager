@@ -78,10 +78,14 @@
   .item-text .toggle-icon { font-size: 9px; color: var(--muted); margin-left: 5px; }
   .item-detail { font-size: 12px; color: #6b7280; margin-top: 5px; line-height: 1.5; display: none; }
   .item-detail.open { display: block; }
-  .item-due { font-size: 10px; margin-top: 3px; }
+  .item-due { font-size: 10px; margin-top: 3px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+  .item-due:hover { text-decoration: underline; }
   .item-due.overdue { color: #dc2626; font-weight: 600; }
   .item-due.today { color: #ea580c; font-weight: 600; }
   .item-due.upcoming { color: var(--muted); }
+  .item-due-input { font-size: 10px; font-family: var(--font-body); border: 1px solid #f59e0b; padding: 1px 4px; margin-top: 3px; outline: none; background: #fffbeb; color: var(--dark); cursor: pointer; }
+  .item-no-date { font-size: 10px; color: #d1d5db; margin-top: 3px; cursor: pointer; }
+  .item-no-date:hover { color: var(--muted); text-decoration: underline; }
   .item-meta { display: flex; gap: 5px; align-items: flex-start; flex-direction: column; flex-shrink: 0; align-items: flex-end; }
   .badge { font-size: 10px; padding: 2px 7px; white-space: nowrap; font-family: var(--font-body); }
   .badge-delegate { background: #f3f4f6; color: #6b7280; }
@@ -339,7 +343,13 @@ function renderItem(item, c) {
             ${item.text}
             ${hasDetail?`<span class="toggle-icon" id="icon-${item.id}">▼</span>`:''}
           </div>
-          ${due ? `<div class="item-due ${due.cls}">${due.label}</div>` : ''}
+          ${due
+            ? `<div class="item-due ${due.cls}" onclick="showDatePicker('${item.id}')" title="Click to change date">📅 ${due.label}</div>`
+            : `<div class="item-no-date" onclick="showDatePicker('${item.id}')" title="Set a due date">+ set date</div>`}
+          <input type="date" class="item-due-input" id="datepicker-${item.id}" style="display:none"
+            value="${item.due_date || ''}"
+            onchange="updateDate('${item.id}', this.value)"
+            onblur="hideDatePicker('${item.id}')" />
           ${hasDetail?`<div class="item-detail" id="detail-${item.id}">${item.detail}</div>`:''}
         </div>
         <div class="item-meta">
@@ -354,6 +364,22 @@ function renderItem(item, c) {
 
 async function toggleImportant(id, current) {
   await db.from('action_items').update({ important: !current }).eq('id', id);
+  await loadItems();
+}
+
+function showDatePicker(id) {
+  const input = document.getElementById(`datepicker-${id}`);
+  if (input) { input.style.display = 'block'; input.focus(); input.click(); }
+}
+
+function hideDatePicker(id) {
+  const input = document.getElementById(`datepicker-${id}`);
+  if (input) setTimeout(() => { input.style.display = 'none'; }, 200);
+}
+
+async function updateDate(id, newDate) {
+  await db.from('action_items').update({ due_date: newDate || null }).eq('id', id);
+  showToast('Date updated');
   await loadItems();
 }
 
